@@ -1,0 +1,129 @@
+Router 1
+this file contains the following configurations:
+*hostname 
+*IP addresses for interfaces 
+*Zone based security
+*OSPF routing protocol  
+
+Router>en
+Router#show run
+Building configuration...
+
+Current configuration : 1611 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router
+!
+!
+!
+!
+!
+!
+!
+!
+no ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2811/K9 sn FTX10171P6T-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+class-map type inspect match-any LAN-TO-WAN
+ match protocol http
+ match protocol https
+ match protocol ftp
+ match protocol smtp
+ match protocol icmp
+ match protocol tcp
+ match protocol udp
+!
+policy-map type inspect LAN-TO-WAN
+ class type inspect LAN-TO-WAN
+  inspect
+!
+!
+!
+zone security WAN
+zone security LAN
+zone-pair security LAN-TO-WAN source LAN destination WAN
+ service-policy type inspect LAN-TO-WAN
+!
+!
+interface FastEthernet0/0
+ ip address 192.168.12.130 255.255.255.240
+ zone-member security LAN
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ ip address 192.168.12.162 255.255.255.240
+ zone-member security LAN
+ duplex auto
+ speed auto
+!
+interface Serial0/2/0
+ ip address 192.168.12.193 255.255.255.240
+ zone-member security LAN
+ clock rate 2000000
+!
+interface Serial0/2/1
+ no ip address
+ clock rate 2000000
+!
+interface FastEthernet1/0
+ ip address 192.168.1.2 255.255.255.252
+ zone-member security WAN
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 3.3.3.3
+ log-adjacency-changes
+ network 192.168.12.160 0.0.0.15 area 0
+ network 192.168.12.128 0.0.0.15 area 0
+ network 192.168.12.192 0.0.0.15 area 0
+ network 192.168.1.0 0.0.0.3 area 0
+!
+router rip
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
